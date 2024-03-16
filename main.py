@@ -18,20 +18,13 @@ def background_task():
         app_title = pyautogui.getActiveWindowTitle()
         # check if app title is changed or not.
         if app_title != new_app_title:
-            # check if app title is changed from  "کافه اینترنشنال" to other thing. new app title here is previous
+            # check if app title is changed from  per_title to other thing. new app title here is previous
             # app title really.
-            '''i = 0
-            for title in title_list:
-                if title == app_title:
-                    i = 1
-            if i == 0:'''
-            # app title is not repetitious and is appended to title_list.
             if app_title != 'Auto Change Language':
                 if app_title:
                     last_title = app_title
             # check if app title is changed from  per_title to other thing. new app title here is previous
             # app title really.
-
             for per_title in persian_titles:
                 if per_title in new_app_title:
                     # change language from PER to ENG
@@ -66,9 +59,6 @@ def set_click():
     persian_titles.append(last_title)
 
 
-'''def on_text_scroll(*args):
-    text1.yview(*args)'''
-
 # Create the main application window
 root = tk.Tk()
 root.title("Auto Change Language")
@@ -84,13 +74,6 @@ label.grid(row=1, column=0, padx=(20, 2), pady=(5, 5))
 # Create a text widget
 text = tk.Text(root, height=1)
 text.grid(row=1, column=1, padx=(2, 20), pady=(5, 5))
-
-'''# Create a Scrollbar widget
-scrollbar = tk.Scrollbar(root, command=on_text_scroll)
-scrollbar.grid(row=1, column=2, )
-
-# Link Text widget and Scrollbar widget
-text1.config(yscrollcommand=scrollbar.set)'''
 
 # Create a button widget
 button2 = tk.Button(root, text="Set Title", command=set_click)
