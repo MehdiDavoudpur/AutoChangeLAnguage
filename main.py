@@ -1,4 +1,5 @@
 import tkinter as tk  # for creating UI
+from tkinter import ttk  # for create a table widget
 import threading  # for monitoring active app in background task
 import time  # for handling sleep time
 import pyautogui  # for getting active app title of windows
@@ -8,6 +9,7 @@ app_title = ''  # for saving title of activating app
 last_title = ''  # for saving the title that is not: 1.'Auto Change Language' 2. previous_title
 previous_title = ''  # for comparing with last_title
 persian_titles = []  # for save selected app_titles in database
+global txt1
 
 
 def background_task():  # for monitoring active app
@@ -67,16 +69,19 @@ def set_click():
 
 
 def show_click():
+    for row in table.get_children():  # clear the table
+        table.delete(row)
     global persian_titles
     persian_titles = database.show()
-    # print(persian_titles)
-    txt2.delete(1.0, 'end')
-    for persian_title in persian_titles:
-        txt2.insert('end', persian_title + '\n')
+    for i, persian_title in enumerate(persian_titles):
+        table.insert("", 'end', text=str(i), values=(persian_title,))
+        # table.insert("", "end",  values=persian_title)
 
 
-# def delete_click():
-
+'''def delete_click():
+    selected_text = txt2.get("sel.first", "sel.last")
+    database.delete(selected_text)
+'''
 
 # Create the main application window
 root = tk.Tk()
@@ -87,17 +92,13 @@ root.grid_rowconfigure(0, weight=1)
 
 
 def widget_block_1(parent):
-    # Create a frame to hold the widgets
     frame = tk.Frame(parent, borderwidth=2, relief="ridge")
 
-    # Add some widgets to the frame
-    # Create button widgets
     btn1 = tk.Button(frame, text="Get", command=get_click)
     btn2 = tk.Button(frame, text="Set", command=set_click)
     btn3 = tk.Button(frame, text="Show", command=show_click)
-    btn4 = tk.Button(frame, text="Delete", command=get_click)
+    btn4 = tk.Button(frame, text="Delete", command=show_click)
 
-    # Use pack() to organize the widgets in the frame
     btn1.grid(row=0, column=0, padx=2)
     btn2.grid(row=0, column=1, padx=2)
     btn3.grid(row=0, column=2, padx=2)
@@ -106,18 +107,23 @@ def widget_block_1(parent):
     return frame
 
 
-# Create multiple blocks of widgets
-block1 = widget_block_1(root)
-
-# Use grid() to organize the blocks in rows and columns
-block1.grid(row=0, column=1, padx=10, pady=10)
-
-
 def widget_block_2(parent):
+    global txt1
+    frame = tk.Frame(parent, borderwidth=2, relief='ridge')
+
+    lbl1 = tk.Label(frame, text='Active App Title:')
+    txt1 = tk.Text(frame, height=1, width=50)
+
+    lbl1.grid(row=0, column=0, padx=2)
+    txt1.grid(row=0, column=1, padx=2)
+
+    return frame
+
+
+def widget_block_3(parent):
     # Create a frame to hold the widgets
     frame = tk.Frame(parent, borderwidth=2, relief="ridge")
 
-    # Add some widgets to the frame
     # Create button widgets
     btn1 = tk.Button(frame, text="Delete All", command=get_click)
     btn2 = tk.Button(frame, text="Exit", command=get_click)
@@ -129,32 +135,22 @@ def widget_block_2(parent):
     return frame
 
 
-# row 1
-lbl1 = tk.Label(root, text='Active App Title:')
-lbl1.grid(row=1, column=0, padx=(20, 2), pady=(5, 5), sticky='e')
+block1 = widget_block_1(root)
+block1.grid(row=0, column=0, padx=10, pady=10)
 
-txt1 = tk.Text(root, height=1, width=50)
-txt1.grid(row=1, column=1, padx=(2, 2), pady=(5, 5))
-
-# row 2
-lbl2 = tk.Label(root, text='All Set Titles:')
-lbl2.grid(row=2, column=0, padx=(20, 2), pady=(5, 5), sticky='e')
-
-
-def on_text_scroll(*args):
-    txt2.yview(*args)
-
-
-txt2 = tk.Text(root, height=25, width=50)
-txt2.grid(row=2, column=1, padx=(2, 2), pady=(5, 5), sticky="ns")
-
-# Create a Scrollbar widget
-scrollbar = tk.Scrollbar(root, command=on_text_scroll)
-scrollbar.grid(row=2, column=2, sticky="ns")
-
-# row 3
 block2 = widget_block_2(root)
-block2.grid(row=3, column=1, padx=10, pady=10)
+block2.grid(row=1, column=0, padx=10, pady=10)
+
+table = ttk.Treeview(root)
+table['columns'] = ('Saved App Title',)
+table.heading("#0", text="ID")
+table.heading('Saved App Title', text='Saved App Title')
+table.column('#0', width=30)
+table.column('Saved App Title', width=470)
+table.grid(row=2, column=0, padx=10, pady=10)
+
+block3 = widget_block_3(root)
+block3.grid(row=3, column=0, padx=10, pady=10)
 
 show_click()
 
