@@ -27,19 +27,19 @@ def background_task():  # for monitoring active app
                     # last_title will be 'Auto Change Language' always. It's necessary to exclude this title.
                     last_title = app_title  # if the title has the 3 above conditions it will be saved.
 
-                    print(f'\nprevious_title = {previous_title} \nlast_title = {last_title}\n')  # for checking
+                    # print(f'\nprevious_title = {previous_title} \nlast_title = {last_title}\n')  # for checking
                     for persian_title in persian_titles:  # survey and compare previous_title and app_title with all
                         # persian_titles.
 
-                        print(f'persian_title = {persian_title}')  # for checking
+                        # print(f'persian_title = {persian_title}')  # for checking
 
-                        if previous_title == persian_title:
+                        if previous_title.startswith(persian_title):
                             previous_language = 'PER'
 
-                        if last_title == persian_title:
+                        if last_title.startswith(persian_title):
                             last_language = 'PER'
 
-                    print(f'\nprevious_lang is {previous_language} & last_lang is {last_language}\n')  # foe checking
+                    # print(f'\nprevious_lang is {previous_language} & last_lang is {last_language}\n')  # foe checking
                     if previous_language == 'ENG' and last_language == 'PER':
                         pyautogui.hotkey('shift', 'alt')  # change language from ENG to PER.
                     if previous_language == 'PER' and last_language == 'ENG':
@@ -78,14 +78,15 @@ def show():
 
 def set_click():
     # persian_titles.append(last_title)
-    database.insert(last_title)
+    edited_active_title = txt1.get("1.0", "end-1c")
+    database.insert(edited_active_title)
     show()
 
 
 def delete_click():
     selected_id = table.selection()[0]  # Get the ID of the selected item
     selected_row = table.item(selected_id, 'values')[0]  # Retrieve the data associated with the selected item
-    print(selected_row)  # Print the selected row data
+    # print(selected_row)  # Print the selected row data
     database.delete(selected_row)
     show()
 
